@@ -1099,20 +1099,22 @@ WHERE estatus = 'E';
 
 /*********************   *14* SENTENCIAS IMPORTANTES   *********************/
 
-GREATEST: Devuelve el valor máximo de una lista de expresiones, ojo si existe valor NULL en la lista, el resultado será NULL
-SELECT GREATEST(col1, col2, col3) AS max_col FROM DUAL;
+-- GREATEST: Devuelve el valor máximo de una lista de expresiones, ojo si existe valor NULL en la lista, el resultado será NULL
+SELECT GREATEST(col1, col2, col3) AS max_col 
+FROM DUAL;
 
-LEAST: Devuelven el valor mínimo de una lista de expresiones, ojo si existe valor NULL en la lista, el resultado será NULL
-SELECT LEAST(col1, col2, col3) AS min_col FROM DUAL;
+-- --LEAST: Devuelven el valor mínimo de una lista de expresiones, ojo si existe valor NULL en la lista, el resultado será NULL
+SELECT LEAST(col1, col2, col3) AS min_col 
+FROM DUAL;
 
-ROW_NUMBER: Numerar las filas 
-SELECT col1, col2, ROW_NUMBER() OVER (ORDER BY col1) AS rn
 
-FLOOR: Redondea hacia abajo
-SELECT FLOOR(3.7) FROM DUAL; -- Devuelve 3
+FLOOR: Redondea hacia abajo--
+SELECT FLOOR(3.7) 
+ROM DUAL; -- Devuelve 3
 
-CEIL: Redondea hacia arriba
-SELECT CEIL(3.2) FROM DUAL; -- Devuelve 4
+--CEIL: Redondea hacia arriba
+SELECT CEIL(3.2) 
+FROM DUAL; -- Devuelve 4
 
 SUBSTR: Extrae una subcadena de una cadena dada, especificando la posición inicial y la longitud
         SELECT SUBSTR(cadena, posición_inicial, longitud) FROM DUAL;
