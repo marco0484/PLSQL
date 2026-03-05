@@ -1,0 +1,140 @@
+-- Creamos el esquema
+CREATE SCHEMA IF NOT EXISTS HONESTEL;
+USE HONESTEL;
+commit;
+-- Tabla principal
+CREATE TABLE TASUFOLIOS_HON (
+  FIFOLIO_ID int PRIMARY KEY,
+  FICASO_ID int,
+  FCFECHA_CREACION varchar(50),
+  FCFECHA_ASIGNACION varchar(50),
+  FCTICKET_TIPO varchar(50),
+  FCDESCRIPCION varchar(50),
+  FCDESCRIPCION2 varchar(50),
+  FCAREA_ASIG varchar(50),
+  FCESTATUS varchar(50),
+  FCRESUL_DEN varchar(50),
+  FCFECHA_CIERRE varchar(50),
+  FCFECHA_RESUELTO varchar(50),
+  FCANAL_ORIGEN varchar(50),
+  FCANONIMATO varchar(50),
+  FCAGENTE_ASIG varchar(50),
+  FCFECHA_STANDBY varchar(50),
+  FCATENDEDOR varchar(50),
+  FCORREO_ATENDEDOR varchar(50),
+  FCESTADO varchar(50),
+  FCREUCPERACION varchar(50),
+  FCONCLUCIONES varchar(50),
+  FIHORAS_INVES int,
+  FDULTIMA_MODIFICACION DATE,
+  FCUSUARIO_MODIFICO varchar(30)
+);
+
+-- Inserta datos ficticios
+INSERT INTO TASUFOLIOS_HON VALUES
+(1, 101, NULL, NULL, 'Denuncia Ética', 'Uso indebido de recursos', 'Se detectó irregularidad', 'Recursos Humanos', 'Abierto', 'Pendiente', NULL, NULL, 'Correo', 'No', 'Agente01', NULL, 'María Pérez', 'maria.perez@empresa.com', 'Baja California', NULL, NULL, 10, NULL, 'admin');
+INSERT INTO TASUFOLIOS_HON VALUES
+(2, 102, NULL, NULL, 'Denuncia Interna', 'Conflicto de intereses', 'Posible relación comercial', 'Auditoría', 'Cerrado', 'Confirmado', NULL, NULL, 'Teléfono', 'Sí', 'Agente02', NULL, 'Carlos Gómez', 'carlos.gomez@empresa.com', 'Jalisco', 'Recuperado', 'Acción Correctiva', 15, NULL, 'admin');
+
+SELECT * FROM TASUFOLIOS_HON;
+TRUNCATE TABLE TASUFOLIOS_HON;
+
+
+-- Tabla de denunciados por folio
+CREATE TABLE TASUDENUNXFOL_HON (
+  FIFOLIO_ID int,
+  FIDENUN_ID int,
+  FINUNDENUN_ID int,
+  FCNOMBRE_DENUNCIADO varchar(100),
+  FCPUESTO_DENUNCIADO varchar(100),
+  FCOMPANIA_DENUNCIADO varchar(70),
+  FCUBICA_DENUNCIADO varchar(50),
+  FCESTADO_DENUNCIADO varchar(50),
+  FCDEPART_DENUNCIADO varchar(50),
+  FCREPONSABLE_DENUN varchar(50),
+  FDULTIMA_MODIFICACION DATE,
+  FCUSUARIO_MODIFICO varchar(50),
+  PRIMARY KEY (FIFOLIO_ID, FIDENUN_ID),
+  FOREIGN KEY (FIFOLIO_ID) REFERENCES TASUFOLIOS_HON(FIFOLIO_ID)
+);
+
+INSERT INTO TASUDENUNXFOL_HON VALUES
+(1, 1, 1001, 'Juan López', 'Gerente de Compras', 'Honestel S.A.', 'Tijuana', 'Baja California', 'Compras', 'Dirección General', NULL, 'admin');
+INSERT INTO TASUDENUNXFOL_HON VALUES
+(2, 1, 1002, 'Ana Torres', 'Jefa de Ventas', 'Honestel S.A.', 'Guadalajara', 'Jalisco', 'Ventas', 'Dirección Comercial', NULL, 'admin');
+
+-- Tabla de denunciantes
+CREATE TABLE TASUDENUNCT_HON (
+  FIFOLIO_ID int,
+  FISOCIO_DENUNCIANTE int,
+  FCNOMBRE_DENUNCIANTE varchar(50),
+  FCPUESTO_DENUNCIANTE varchar(50),
+  FCORREO_DENUNCIANTE varchar(50),
+  FCTEL_DENUNCIANTE varchar(50),
+  FCDEPART_DENUNCIANTE varchar(50),
+  FICONTAC_DENUNCIANTE varchar(50),
+  FCMEDIOCONT_DENUNCIANTE varchar(50),
+  FCHALLAZGO_DENUNCIANTE varchar(50),
+  FDULTIMA_MODIFICACION DATE,
+  FCUSUARIO_MODIFICO varchar(50)
+);
+
+INSERT INTO TASUDENUNCT_HON VALUES
+(1, 501, 'Laura Medina', 'Analista Contable', 'laura.medina@empresa.com', '6641234567', 'Contabilidad', 'Contacto01', 'Correo', 'Faltantes detectados', NULL, 'admin');
+INSERT INTO TASUDENUNCT_HON VALUES
+(2, 502, 'Ricardo Pérez', 'Supervisor', 'ricardo.perez@empresa.com', '3339876543', 'Operaciones', 'Contacto02', 'Llamada', 'Conflicto reportado', NULL, 'admin');
+
+COMMIT;
+
+-- Tabla de involucrados
+CREATE TABLE TASUINVOLU_HON (
+  FIFOLO_ID int,
+  FINVOLUCRADO_ID int,
+  FINVOLUCRADO_DESC varchar(4000),
+  FDULTIMA_MODIFICACION DATE,
+  FCUSUARIO_MODIFICO varchar(30),
+  FCNOMBRE_INVOLUCRADO varchar(80),
+  FCPUESTO_INVOLUCRADO varchar(110),
+  FCCOMPANIA_INVOLUCRADO varchar(80),
+  FCHALLAZGO_1_INVOL varchar(80),
+  FCHALLAZGO_2_INVOL varchar(80),
+  FCONSECUENCIA_INVOL varchar(80),
+  FCRESPON_EJEC_INVOL varchar(80),
+  FCFECHA_EJEC_INVOL varchar(80),
+  FCNIVEL_MANDO_INVOL varchar(110)
+);
+
+INSERT INTO TASUINVOLU_HON VALUES
+(1, 201, 'Participación indirecta en la compra irregular', NULL, 'admin', 'Sofía Ramírez', 'Asistente', 'Honestel S.A.', 'Reporte recibido', 'Verificado', 'Advertencia', 'Recursos Humanos', '2025-09-25', 'Operativo');
+INSERT INTO TASUINVOLU_HON VALUES
+(2, 202, 'Omisión en control de proveedores', NULL, 'admin', 'Luis Hernández', 'Coordinador', 'Honestel S.A.', 'Llamada anónima', 'Auditoría interna', 'Capacitación requerida', 'Auditoría', '2025-09-28', 'Medio Mando');
+
+-- Tabla auxiliar de gravedad y urgencia
+CREATE TABLE TASUFOLIOS2_HON (
+  FIFOLO_ID int,
+  FIGRAVEDAD_ID int,
+  FIURGEN_ID int,
+  FDULTIMA_MODIFICACION DATE,
+  FCUSUARIO_MODIFICO varchar(30)
+);
+
+INSERT INTO TASUFOLIOS2_HON VALUES
+(1, 3, 2, NULL, 'admin'),
+(2, 2, 1, NULL, 'admin');
+
+-- Tabla de temas por denuncia
+CREATE TABLE TASUTMXDNXF_HON (
+  FIFOLO_ID int,
+  FIDENUN_ID int,
+  FITEMA_ID int,
+  FCTEMA_DESC varchar(500),
+  FCCOMP_DESC varchar(500),
+  FDULTIMA_MODIFICACION DATE,
+  FCUSUARIO_MODIFICO varchar(30)
+);
+
+INSERT INTO TASUTMXDNXF_HON VALUES
+(1, 1, 101, 'Uso indebido de fondos', 'Contabilidad', NULL, 'admin'),
+(2, 1, 102, 'Conflicto de interés con proveedor', 'Compras', NULL, 'admin');
+
+COMMIT;

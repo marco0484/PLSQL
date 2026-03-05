@@ -1,0 +1,9 @@
+drop table seguros.cat_puestos;
+drop table seguros.mst_socios;
+drop table seguros.cat_datos_generales;
+drop table seguros.det_conyuge;
+drop table seguros.cat_estado_salud;
+drop table seguros.det_diagnostico_med;
+drop table seguros.cat_eventos;
+drop table seguros.det_eventos_seguros;
+drop table seguros.cat_partes_cuerpo;

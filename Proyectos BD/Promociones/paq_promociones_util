@@ -1,0 +1,102 @@
+create or replace package paq_promociones_util
+as
+procedure  prc_card_promociones (
+            p_codigo_error out number,
+            p_mensaje out varchar2,
+            leyenda out sys_refcursor
+                                );
+
+procedure prc_ban_promociones (
+            p_cod_cliente in number,
+            p_codigo_error out number,
+            p_mensaje out varchar2,
+            p_bandera out number
+);
+
+end paq_promociones_util;
+
+/
+
+create or replace package body paq_promociones_util
+as
+procedure  prc_card_promociones (
+            p_codigo_error out number,
+            p_mensaje out varchar2,
+            leyenda out sys_refcursor
+                                )
+as
+begin
+    open leyenda for
+    select cat_ofe.cod_tipo_oferta,
+            cat_ofe.des_titulo,
+            cat_ofe.des_subtitulo,
+            cat_ofe.des_mensaje,
+            cat_ofe.des_boton,
+            cat_ima.cod_imagen
+    from cat_variantes_oferta cat_ofe
+    inner join cat_imagenes cat_ima
+    on cat_ofe.cod_imagen = cat_ima.cod_imagen
+    and cat_ofe.ind_activo = 1;
+
+    p_codigo_error := 0;
+    p_mensaje := 'Proceso Ok';
+
+EXCEPTION WHEN OTHERS THEN 
+    p_codigo_error := 1;
+    p_mensaje := 'Error: ' || dbms_utility.format_error_stack;
+END prc_card_promociones;
+
+/*****/
+
+procedure prc_ban_promociones (
+            p_cod_cliente in number,
+            p_codigo_error out number,
+            p_mensaje out varchar2,
+            p_bandera out number
+)
+as                          
+v_promociones number;
+v_cod_cliente number;
+v_ex_promociones exception;
+v_ex_promocion_vigente exception;
+begin
+begin
+    select 1 
+    into v_promocion
+    from cat_promociones
+    where (trunc (cat_prom.fyh_vencimiento) IS NULL)
+    or (trunc (cat_prom.fyh_vencimiento) >= trunc (sysdate))
+    and cat_prom.ind_activo = 1
+    fetch first 1 row only;
+exception when no_Data_found 
+then RAISE v_ex_promocion;
+end;
+
+    IF v_promocion = 1
+    then select 1
+        into v_cod_cliente
+        from  rel_exclusion_promociones
+        where cod_cliente = p_cod_cliente;
+
+        RAISE v_ex_promocion_vigente;
+
+        EXCEPTION WHEN no_data_found 
+        THEN p_bandera := 1;
+        p_codigo_error := 0;
+        p_mensaje := fn_get_mensaje(436);
+
+        END;
+        END IF;
+EXCEPTION WHEN v_ex_promocion_vigente THEN
+    p_bandera := 0;
+    p_codigo_error := 0;
+    p_mensaje := fn_get_mensaje(436);
+WHEN v_ex_promocion THEN
+    p_bandera := 0;
+    p_codigo_error := 0;
+    p_mensaje := fn_get_mensaje(449);
+WHEN OTHERS THEN 
+    p_codigo_error := 1;
+    p_mensaje := 'Error: ' || dbms_utility.format_error_stack;
+END prc_ban_promociones;
+END paq_promociones_util;

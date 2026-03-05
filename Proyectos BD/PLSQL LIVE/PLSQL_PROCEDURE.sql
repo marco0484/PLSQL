@@ -1,0 +1,133 @@
+create or replace PROCEDURE                            primer_proceso
+-- EXEC MATEHUALA0484_SCHEMA_H9HQH.primer_proceso;
+
+-- Declaracion de constantes, variables y excepciones
+AS
+    C_NOMBRE     CONSTANT VARCHAR2(30) := 'Marco';
+    C_NOMBRE_2   CONSTANT VARCHAR2(50) := 'Ivonne';
+    C_NUMERO     NUMBER;
+    C_CUMPLE     DATE := TO_DATE('011097', 'ddmmyy');
+    C_FECHA DATE := SYSDATE;
+    V_EDAD       NUMBER := 27;
+    V_IDARTICULO NUMBER;
+    V_DESC_ART   VARCHAR2(10);
+    V_IND_ACT    MATEHUALA0484_SCHEMA_H9HQH.articulos.ID_ARTICULO%TYPE;
+    EX_EDAD      EXCEPTION;
+BEGIN
+    -------------------------------
+    -- BLOQUE 1
+    -------------------------------
+    BEGIN
+        SELECT 1 
+        INTO C_NUMERO 
+        FROM DUAL;
+
+        DBMS_OUTPUT.PUT_LINE('Este es el numero: ' || C_NUMERO);
+        DBMS_OUTPUT.PUT_LINE('La fecha del dia de hoy es' ||' '||C_FECHA);
+        DBMS_OUTPUT.PUT_LINE('Mi nombre es: ' || C_NOMBRE);
+        DBMS_OUTPUT.PUT_LINE('Y mi novia es: ' || C_NOMBRE_2);
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Error inesperado en bloque 1: ' || SQLERRM);
+    END;
+
+    -------------------------------
+    -- BLOQUE 2
+    -------------------------------
+    BEGIN
+        IF V_EDAD < 27 THEN
+            RAISE EX_EDAD;
+        END IF;
+
+        DBMS_OUTPUT.PUT_LINE('Termina el bloque 2');
+
+    EXCEPTION
+        WHEN EX_EDAD THEN
+            DBMS_OUTPUT.PUT_LINE('Se activó la excepción personalizada (edad).');
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Error inesperado en bloque 2: ' || SQLERRM);
+    END;
+
+    -------------------------------
+    -- BLOQUE 3
+    -------------------------------
+    BEGIN
+        SELECT 1 INTO C_NUMERO FROM DUAL;
+        DBMS_OUTPUT.PUT_LINE('El código llegó aquí');
+    END;
+
+    -------------------------------
+    -- BLOQUE DEL CURSOR
+    -------------------------------
+    BEGIN
+        DECLARE
+            CURSOR CURSOR_1 IS
+                SELECT ID_ARTICULO, DES_ART, IND_ACTIVO
+                FROM ARTICULOS;
+        BEGIN
+            OPEN CURSOR_1;
+
+            LOOP
+                FETCH CURSOR_1 
+                INTO V_IDARTICULO, V_DESC_ART, V_IND_ACT;
+                EXIT WHEN CURSOR_1%NOTFOUND;
+
+                DBMS_OUTPUT.PUT_LINE(
+                    'ID: ' || V_IDARTICULO ||
+                    ' | DESC: ' || V_DESC_ART ||
+                    ' | ACTIVO: ' || V_IND_ACT
+                );
+            END LOOP;
+
+            CLOSE CURSOR_1;
+
+        EXCEPTION
+            WHEN OTHERS THEN
+                DBMS_OUTPUT.PUT_LINE('Error en el cursor: ' || SQLERRM);
+        END;
+
+    END;
+    /*
+        Ciclo FOR
+    */
+    BEGIN
+                FOR i IN 1..10 
+                LOOP
+                    DBMS_OUTPUT.PUT_LINE('El contador es: ' || i);
+                END LOOP;
+        END;
+
+    BEGIN
+        DECLARE 
+        V_CONTADOR NUMBER:=0;
+        BEGIN
+            WHILE V_CONTADOR <= 3
+            LOOP 
+                SELECT NVL(SUM(ID_ARTICULO),0)
+                INTO V_CONTADOR
+                FROM ARTICULOS;
+            DBMS_OUTPUT.PUT_LINE('Total articulos: ' || V_CONTADOR);
+            EXIT WHEN V_CONTADOR =3;
+            END LOOP;
+            END;
+        END;
+
+        BEGIN
+                DECLARE
+                V_RESULTADO_FNC NUMBER;
+            BEGIN
+                SELECT MATEHUALA0484_SCHEMA_H9HQH.suma(0,0)
+                INTO V_RESULTADO_FNC
+                FROM DUAL;
+
+                DBMS_OUTPUT.PUT_LINE('El resultado de la funcion es: '|| V_RESULTADO_FNC);
+                IF  V_RESULTADO_FNC IS NOT NULL
+                                   OR V_RESULTADO_FNC = 0
+                THEN DBMS_OUTPUT.PUT_LINE('El resultado no es nulo');
+                ELSE DBMS_OUTPUT.PUT_LINE('El resultado es nulo');
+                END IF;
+            END;
+            END;
+
+END primer_proceso;

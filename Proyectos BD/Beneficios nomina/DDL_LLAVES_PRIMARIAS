@@ -1,0 +1,27 @@
+alter table bank.cat_imagenes
+add constraint rpk_cat_imagenes
+primary key (cod_imagen);
+
+alter table  bank.cat_tipos_oferta
+add constraint rpk_cat_tipos_oferta 
+primary key (cod_tipo_oferta);
+
+alter table  bank.mst_beneficios_nomina
+add constraint rpk_mst_beneficios_nom 
+primary key (cod_cliente,cod_tipo_oferta);
+
+alter table  bank.cat_grupos_asistencia
+add constraint rpk_cacat_grupos_asistenciat_grupos_beneficios
+primary key (cod_grupo);
+
+alter table  bank.cat_beneficios_asistencia
+add constraint rpk_cat_beneficios_Asistencia
+primary key (cod_grupo,cod_beneficio);
+
+alter table  bank.cat_clasificacion_beneficios
+add constraint rpk_cat_clasif_beneficios
+primary key (cod_grupo,cod_clasificacion);
+
+alter table bank.det_beneficios_nomina
+add constraint rpk_cat_detalle_beneficios
+primary key (cod_cliente,cod_grupo,cod_beneficio,cod_tipo_oferta);

@@ -1,0 +1,72 @@
+/* Tablas */
+
+create table bank.cat_imagenes(
+							cod_imagen  smallint,
+							desc_imagen char(100),
+							ind_activo  smallint,
+							fyh_carga   timestamp,
+							fyh_modificacion timestamp
+						 );
+
+create table bank.cat_tipos_oferta
+									(cod_tipo_oferta smallint,
+									desc_tipo_oferta char(30),
+									num_orden 		 smallint,
+									ind_activo 		 smallint,
+									fyh_carga 		 timestamp,
+									fyh_modificacion timestamp);
+
+
+create table bank.mst_beneficios_nomina
+										(cod_cliente 	 integer,
+										cod_tipo_oferta  smallint,
+										fyh_carga 		 timestamp,
+										fyh_modificacion timestamp);
+
+create table bank.cat_grupos_asistencia
+										(cod_grupo 	      smallint,
+										 desc_grupo 	  char(40),
+										 ind_activo 	  smallint,
+										 num_orden        smallint,
+										 fyh_carga 		  timestamp,
+										 fyh_modificacion timestamp);
+
+create table bank.cat_beneficios_asistencia
+											(cod_grupo 			 smallint,
+											cod_beneficio 		 smallint,
+											desc_beneficio 		 char(100),
+											desc_beneficio_largo text,
+											cod_clasificacion 	 smallint,
+											cod_imagen 			 smallint,
+											ind_activo  		 smallint,
+											fyh_carga 		     timestamp,
+											fyh_modificacion     timestamp);
+
+create table bank.cat_clasificacion_beneficios
+												(cod_grupo 		   smallint,
+												cod_clasificacion  smallint,
+												desc_clafificacion char(70),
+												ind_activo 		   smallint,
+												fyh_carga          timestamp,
+												fyh_modificacion   timestamp);
+
+create table bank.det_beneficios_nomina
+										(cod_cliente  	integer,
+										cod_grupo 	  	 smallint,
+										cod_beneficio    smallint,
+										cod_tipo_oferta  smallint,
+										fyh_carga 		 timestamp,
+										fyh_modificacion timestamp);
+
+create table bank.rel_beneficios_asistencia
+										(
+											cod_grupo smallint,
+											cod_beneficio smallint,
+											cod_sub_beneficio smallint,
+											desc_sub_beneficio char(500),
+											cod_imagen smallint,
+											ind_activo smallint,
+											num_orden smallint,
+											fyh_carga timestamp,
+											fyh_modificacion timestamp
+										);

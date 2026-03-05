@@ -1,0 +1,20 @@
+alter table  bank.mst_beneficios_nomina
+add constraint rfk_mst_beneficios
+foreign key (cod_tipo_oferta)
+references bank.cat_tipos_oferta(cod_tipo_oferta);
+
+alter table  bank.det_beneficios_nomina
+add constraint rfk_rel_beneficios
+foreign key (cod_grupo,cod_beneficio)
+references bank.cat_beneficios_asistencia(cod_grupo,cod_beneficio);
+
+alter table  bank.cat_clasificacion_beneficios
+add constraint rfk_clasifificacion
+foreign key (cod_grupo)
+references bank.cat_grupos_asistencia(cod_grupo);
+
+alter table bank.rel_beneficios_asistencia 
+add constraint rfk_relacion_subeneficios
+foreign key (cod_grupo,cod_beneficio)
+references bank.cat_beneficios_asistencia
+(cod_grupo,cod_beneficio);

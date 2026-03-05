@@ -1,0 +1,87 @@
+-- Crea una tabla que permita hacer operaciones matemáticas (sum, resta, etc) con sus campos
+
+CREATE TABLE ventas_articulos (
+    venta_id      NUMBER,
+    fecha_venta   DATE,
+    articulo      VARCHAR2(50),
+    talla         VARCHAR2(5),
+    precio        NUMBER(8,2),
+    cantidad      NUMBER,
+    vendedor      VARCHAR2(30)
+);
+
+-- Agrega registros para realizar las operaciones que consideres necesarias
+
+INSERT INTO ventas_articulos VALUES (1, DATE '2025-01-05', 'Playera', 'CH', 199.00, 2, 'Ana');
+INSERT INTO ventas_articulos VALUES (2, DATE '2025-01-05', 'Playera', 'M',  199.00, 1, 'Ana');
+INSERT INTO ventas_articulos VALUES (3, DATE '2025-01-06', 'Playera', 'G',  199.00, 3, 'Luis');
+INSERT INTO ventas_articulos VALUES (4, DATE '2025-01-06', 'Pantalón', 'M',  499.00, 1, 'Luis');
+INSERT INTO ventas_articulos VALUES (5, DATE '2025-01-07', 'Pantalón', 'G',  499.00, 2, 'Ana');
+INSERT INTO ventas_articulos VALUES (6, DATE '2025-01-07', 'Sudadera', 'CH', 699.00, 1, 'Carlos');
+INSERT INTO ventas_articulos VALUES (7, DATE '2025-01-08', 'Sudadera', 'M',  699.00, 2, 'Carlos');
+INSERT INTO ventas_articulos VALUES (8, DATE '2025-01-08', 'Sudadera', 'G',  699.00, 1, 'Ana');
+
+-- Verifica que tu tabla se haya creado y tenga los registros insertados
+select * from ventas_articulos;
+
+-- Guarda tus cambios si lo crees necesario
+COMMIT;
+
+--truncate table ventas_articulos; -- truncate no necesita commit
+
+-- Realiza consultas que utilicen la cláusula PARTITION BY para hacer cálculos agrupados por algún campo y explica brevemente qué hace cada consulta
+
+SELECT venta_id
+        ,fecha_venta
+        ,articulo
+        ,talla
+        ,precio
+        ,cantidad
+        ,vendedor
+        ,SUM(cantidad) OVER (PARTITION BY articulo) AS total_por_articulo   -- Suma de cantidad por articulo
+FROM ventas_articulos;
+
+select articulo
+        ,talla
+        ,cantidad
+        ,SUM(cantidad) OVER (Partition by talla) as tot_talla
+from ventas_articulos;                  -- Cantidad por taa
+
+
+select max(cantidad)
+from VENTAS_ARTICULOS;
+
+select min(cantidad)
+from VENTAS_ARTICULOS;
+
+SELECT talla
+        ,MAX(cantidad)
+ FROM VENTAS_ARTICULOS
+ group by talla;
+
+ SELECT MAX(cantidad)
+        ,vendedor
+    FROM VENTAS_ARTICULOS
+    group by vendedor;
+
+SELECT SUM(CANTIDAD)
+ FROM ventas_articulos;
+
+ SELECT AVG(cantidad)
+ from ventas_articulos;
+
+ SELECT COUNT(1) from ventas_articulos;
+
+SELECT
+    fecha_venta,
+    articulo,
+    talla,
+    precio,
+    cantidad,
+    precio * cantidad AS venta_del_dia,
+    SUM(precio * cantidad) OVER (
+        ORDER BY fecha_venta
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS ventas_acumuladas
+FROM ventas_articulos
+ORDER BY fecha_venta;
