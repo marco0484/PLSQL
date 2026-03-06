@@ -31,6 +31,7 @@ Fecha de creacion: 28 de enero del 2026
     *9* Having
   *9.1* JOBS 
   *9.2* ROWNUM & ROWNUMBER
+  *9.3* OVER PARTITION
     *10* Excepciones
     *11* Excepciones personalizadas
     *12* Creacion de tablas con condiciones especiales
@@ -42,9 +43,8 @@ Fecha de creacion: 28 de enero del 2026
         Paquete para produccion de administracion de tablas
     *50* Paquete INS, UPD, DEL, GET
 
-    Buscar objetos en la base de datos
-    *70* 
-
+    *70* Buscar objetos en la base de datos 
+    *71* EXPLAIN PLAN 
     
                                 
                                     Introduccion a PLSQL 
@@ -833,6 +833,7 @@ END;
 
 /*********************   HAVING   *********************/
 -- Agrupa los registros que tengan la misma combinación de col1 y col2.
+
 SELECT col1,
        col2, 
        COUNT(*) AS cantidad
@@ -899,21 +900,51 @@ BEGIN
 END;
 
 /******************** *9.2* ROWNUM & ROWNUMBER  ********************/
+-- ROWNUM es una pseudocolumna que Oracle asigna según va leyendo las filas.
+
+select * from 
+(select id_venta,
+        vendedor,
+        region,
+         rownum rn
+ from ventas_over)
+ where rn = 4;
+
+-- ROW_NUMBER() es una función analítica que numera filas después de ordenar.
+
+ SELECT
+    vendedor,
+    monto,
+    ROW_NUMBER() OVER (ORDER BY monto DESC) numero
+FROM ventas_over;
+
+/******************* *9.3* OVER PARTITION **************************/
+SELECT
+    vendedor,
+    region,
+    monto,
+    SUM(monto) OVER (PARTITION BY vendedor ) total_vendedor
+FROM ventas_over;
 
 /******************** *10* EXCEPTIONES PERSONALIZADAS   ********************/
 -- Es una excepción que tú defines manualmente para controlar reglas de negocio.
 DECLARE
    e_monto_invalido EXCEPTION;
+   v_monto          NUMBER:= 1;
+   v_fecha          DATE;
 
 BEGIN
+        SELECT SYSDATE 
+        INTO v_fecha
+        FROM DUAL;
 
-   IF v_monto <= 0 THEN
+   IF v_monto <= 2 THEN
       RAISE e_monto_invalido;
    END IF;
 
 EXCEPTION
    WHEN e_monto_invalido THEN
-      DBMS_OUTPUT.PUT_LINE('El monto no es válido');
+      DBMS_OUTPUT.PUT_LINE('El monto no es válido' || '  ' || v_fecha);
 END;
 
 /*********************   *11* SECUENCIAS   *********************/
@@ -1145,8 +1176,8 @@ CREATE OR REPLACE PROCEDURE test_dinamic
    nombre_tabla VARCHAR2,
    columnas     VARCHAR2
 )
-AUTHID CURRENT_USER -- 
-IS -- esto es
+AUTHID CURRENT_USER 
+IS
 BEGIN
    EXECUTE IMMEDIATE 
       'CREATE TABLE ' || nombre_tabla || ' (' || columnas || ')'; -- ojo en el espacio despues del create
@@ -1372,4 +1403,22 @@ SELECT job_name
      , state
 FROM user_scheduler_jobs;
 
+/******************** EXPLAIN PLAN ********************/
+/*
+Es la estrategia que el motor de la base de datos decide usar para ejecutar tu query.
+Antes de ejecutar un SELECT, Oracle analiza varias cosas:
+índices
+tamaño de tablas
+estadísticas
+joins
+filtros
 
+Con eso decide cuál es la forma más eficiente de obtener los datos.
+*/
+
+EXPLAIN plan 
+FOR
+SELECT * FROM  ventas_over;
+
+SELECT *
+FROM TABLE(DBMS_XPLAN.DISPLAY);
