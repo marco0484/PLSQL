@@ -667,6 +667,20 @@ BEGIN
     END CASE;
 END;
 
+-- Otro ejemplo
+
+SELECT ID_VENTA,
+        VENDEDOR,
+        CASE WHEN VENDEDOR = 'Ana' THEN 'Mancha'
+            ELSE 'Sin asignar'
+        END ejemplo,
+        CASE WHEN ID_VENTA IN (1,2,3) THEN 1000
+        ELSE 0
+        END caso_2,
+        REGION,
+        FECHA
+FROM VENTAS_OVER;
+
 /********************  *6* NESTED TYPE  ********************/
 -- Se utiliza para crear tipos de datos personalizados que pueden ser utilizados en tablas, procedimientos, funciones, etc.
 
