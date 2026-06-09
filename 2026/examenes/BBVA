@@ -1,0 +1,23 @@
+EJERCICIO 1.
+Agregar un registro en la tabla PUESTO y en la tabla EMPLEADO tomando en cuenta la siguente imagen
+
+TABLA perfiles_empleados
+    |   ID  |   PUESTO      |   SALARIO_MIN     |       SALARIO_MAX |
+    |   1   | Administrador |       5000        |           10000   |
+
+TABLA empleados
+    Puesto: Administrador
+    Nombre: Juan Perez Perez
+    Fecha Ingreso: 05/07/2021
+    Email: matehuala04984@gmail.com
+    salario: 7000
+    pensionado: check
+
+
+
+EJERCICIO 2.
+CREAR LA SIGUEINTE ESTRUCTURA INCLUYENDO PK, FK DE LA tabla perfiles_empleados y empleados
+
+EJERCICIO 3.
+Crear un bloque anonimo para imprimir todos los departamentos que tienen el salario mayor a 24900, utilizar manejo de exception,
+utilizar dbms output, merge, using, when matched thenn

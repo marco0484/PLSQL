@@ -1,0 +1,50 @@
+/********************************************************************
+  LIMPIEZA GENERICA DE OBJETOS
+********************************************************************/
+
+BEGIN
+
+  FOR x IN (
+
+    SELECT object_name,
+           object_type
+    FROM user_objects
+
+    -- CAMBIAR SOLO ESTA LINEA
+    WHERE object_type = 'FUNCTION'
+
+    -- FUNCTION
+    -- PROCEDURE
+    -- PACKAGE
+    -- PACKAGE BODY
+    -- VIEW
+    -- TRIGGER
+    -- TYPE
+    -- SEQUENCE
+    -- SYNONYM
+
+  ) LOOP
+
+    BEGIN
+
+      EXECUTE IMMEDIATE
+        'DROP ' || x.object_type || ' "' || x.object_name || '"';
+
+      DBMS_OUTPUT.PUT_LINE(
+        x.object_type || ' ELIMINADO: ' || x.object_name
+      );
+
+    EXCEPTION
+      WHEN OTHERS THEN
+
+        DBMS_OUTPUT.PUT_LINE(
+          'ERROR EN ' || x.object_name ||
+          ' -> ' || SQLERRM
+        );
+
+    END;
+
+  END LOOP;
+
+END;
+/
